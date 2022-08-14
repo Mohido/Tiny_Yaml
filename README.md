@@ -2,7 +2,9 @@
 A powerful simple lightweight YAML parser library for C++. There are lots of libraries which parse yaml files in C++, yet they are cumbersome and very heavy to include 
 in a performance-matter project, thus increasing the need for a minimal robust parser. 
 
-## Features
+--- 
+
+## Features:
 1. Very easy to integrate to your project:
     1. Copy the `yaml/` directory to your project.
     2. Include the `yaml.hpp` file in your source code.
@@ -15,6 +17,7 @@ in a performance-matter project, thus increasing the need for a minimal robust p
 3. Simple to Use:
     * Retreiving values of nodes or lists are quite simple and intuitive. Note, the syntax is shown below.
 
+---
 
 ## How to Use:
 The content below represents a yaml file, then a set of examples on how to extract the data:
@@ -76,6 +79,9 @@ First of all, create a yaml parser object:
       ```
       coolYamlObject["node_list"]["1"]["extra"].getData<std::vector<std::string>>()[2];
       ```
+      
+---
 
-
-
+## Notes:
+    * Contributions are welcome, yet the author (Me) must approve it first.
+    * Bugs/Suggestions/Reports can be created as issues on Github with the desired label.
