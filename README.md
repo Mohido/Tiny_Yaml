@@ -50,6 +50,7 @@ The content below represents a yaml file, then a set of examples on how to extra
        - extra2			
        - extra3			
 ```
+
 First of all, create a yaml parser object:
   ```
   YAML::Yaml coolYamlObject(<yaml_file_path>);
@@ -83,5 +84,5 @@ First of all, create a yaml parser object:
 ---
 
 ## Notes:
-    * Contributions are welcome, yet the author (Me) must approve it first.
-    * Bugs/Suggestions/Reports can be created as issues on Github with the desired label.
+    - Contributions are welcome, yet the author (Me) must approve it first.
+    - Bugs/Suggestions/Reports can be created as issues on Github with the desired label.
