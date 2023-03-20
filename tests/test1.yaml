@@ -1,0 +1,25 @@
+ object:					
+   name: "mohido"			
+   property: "cool as hell"
+ 							
+ version: 123				
+ academy: "333"			
+ 							
+ list:						
+   - item1					
+   - item2					
+   - item3					
+ 							
+ node_list: 				
+   - name : "node1"		
+     value: 1				
+     hell:					
+       - item1: "sang"		
+       - item1: "mang"		
+   - name : "node2"		
+     value: 2				
+     temp: extra			
+     extra:				
+       - extra1			
+       - extra2			
+       - extra3			
