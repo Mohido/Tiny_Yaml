@@ -84,5 +84,5 @@ First of all, create a yaml parser object:
 ---
 
 ## Notes:
-    - Contributions are welcome, yet the author (Me) must approve it first.
+    - Contributions are welcome!
     - Bugs/Suggestions/Reports can be created as issues on Github with the desired label.
