@@ -106,6 +106,7 @@ namespace YAML {
 		if (this->m_children.find(nid) != this->m_children.end())
 			return false;
 		this->m_children.insert({ nid, node });
+		return true; //Fix SIGILL error
 	}
 	
 
