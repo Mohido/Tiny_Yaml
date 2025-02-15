@@ -2,3 +2,9 @@ version: 1.2.3
 name: "tiny yaml"
 age: 123
 alive: true
+# The complex_text will be broken.
+complex_text: "-1234he-"
+comment_text: "this is how to write a # comment"
+var_comm: "Some text" # This is some weird commend
+special_text: "Some#text" # With special character in middle of string.
+spaced_value:    "Some#text"    
