@@ -31,7 +31,7 @@ namespace tests {
         }
     #endif
 
-    static bool test_variables(){
+    bool test_1_variables(){
         int passed = 0;
         int total = 0;
         std::cout << "############################" << std::endl;
