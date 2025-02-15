@@ -102,10 +102,8 @@ First of all, create a yaml parser object:
   - Does not support all yaml specifications
   - Does not support multi-line strings
   - Does not support multiple yaml documents in a single file (`---`, `...` can cause bugs)
-  - Using `#` in strings will be treated as a comment (even if surrounded by quotes)
   - Does not write yaml files (it only reads them)
   - Does not support `%` specification (e.g. `%YAML 1.2`)
-  - Having '-' in a string will cause a bug
   - All values must be gotten as strings (by using `getData<string>()`) (even numbers and booleans must be gotten as strings and then casted dynamically)
     - e.g: `variable: ""` in yaml will return `"\"\""` value in C++
 
