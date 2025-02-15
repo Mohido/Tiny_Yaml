@@ -42,6 +42,10 @@ namespace tests {
             total++; passed += assert(yamlFile["name"].getData<std::string>(), std::string("\"tiny yaml\""));
             total++; passed += assert(yamlFile["age"].getData<std::string>(), std::string("123"));
             total++; passed += assert(yamlFile["alive"].getData<std::string>(), std::string("true"));
+            total++; passed += assert(yamlFile["complex_text"].getData<std::string>(), std::string("\"-1234he-\"")); 
+            total++; passed += assert(yamlFile["comment_text"].getData<std::string>(), std::string("\"this is how to write a # comment\""));
+            total++; passed += assert(yamlFile["var_comm"].getData<std::string>(), std::string("\"Some text\""));
+            total++; passed += assert(yamlFile["special_text"].getData<std::string>(), std::string("\"Some#text\""));
         }catch(const std::exception& e){
             std::cerr << e.what() << std::endl;
             return false;

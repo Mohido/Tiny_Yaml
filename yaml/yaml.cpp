@@ -144,15 +144,60 @@ namespace TINY_YAML {
 
 			/*Get the positions of the yaml textmarks*/
 			std::string lineContent = buf;		// Transform it into a string to use C++ string methods
-			std::size_t hashPos = lineContent.find('#');
-			// TODO: Don't erase if hash is between quotes
+
+			std::size_t hashPos = std::string::npos;
+			std::size_t fstQuotePos = std::string::npos;
+			std::size_t lstQuotePos = std::string::npos;
+			std::size_t dashPos = std::string::npos;
+			// Find special characters which takes NO affect if they are in "" or ''
+			for (size_t i = 0; i < lineContent.length(); i++) {
+				char c = lineContent[i];
+				switch (c)
+				{
+				case '-': {
+					// DO NOT update If ' or " then comes and not ended. And if it is already assigned
+					if( !(fstQuotePos != std::string::npos && lstQuotePos == std::string::npos) && dashPos == std::string::npos) {
+						dashPos = i;
+					}}
+					break;
+				case '#' : {
+					// DO NOT update If ' or " comes and not ended. And if # is already found
+					if( hashPos == std::string::npos && !(fstQuotePos != std::string::npos && lstQuotePos == std::string::npos)) {
+						hashPos = i;
+					}}
+					break;
+				case '\'':
+					if(hashPos == std::string::npos){
+						if(fstQuotePos == std::string::npos)
+							fstQuotePos = i;
+						else if(lstQuotePos == std::string::npos && lineContent[fstQuotePos] == c)
+							lstQuotePos = i;
+					}
+					break;
+				case '\"':
+					if(hashPos == std::string::npos){
+						if(fstQuotePos == std::string::npos)
+							fstQuotePos = i;
+						else if(lstQuotePos == std::string::npos && lineContent[fstQuotePos] == c)
+							lstQuotePos = i;
+					}
+					break;
+				default:
+					break;
+				}
+			}
 			
+			if(fstQuotePos != std::string::npos && lstQuotePos == std::string::npos){
+				std::cerr << "ERROR: unclosed quote found. Please close the quote and reparse." << std::endl;
+				faulty = true; break;
+			}
+
 			if (hashPos != std::string::npos) 
 				lineContent.erase(hashPos);
+
 			std::size_t colonPos = lineContent.find(':');
-			std::size_t dashPos	 = lineContent.find('-');
 			std::size_t firstCharPos = lineContent.find_first_not_of(" -#\t\f\v\n\r");
-			std::size_t lastCharPos = lineContent.find_last_not_of(" \t\f\v\n\r");
+			std::size_t lastCharPos = lineContent.find_last_not_of(" #\t\f\v\n\r");
 
 			/*Validation layers*/
 			if (firstCharPos == std::string::npos)		// If line is empty (Only white spaces), read next line
@@ -164,7 +209,7 @@ namespace TINY_YAML {
 
 			/*Starting building the pnode*/
 			std::shared_ptr<Node> pnode;
-			std::size_t nodeLastCharPos = (colonPos < lastCharPos + 1) ? colonPos : lastCharPos + 1;
+			std::size_t nodeLastCharPos = (colonPos < lastCharPos) ? colonPos : lastCharPos;
 			std::string nodeID = lineContent.substr(firstCharPos, nodeLastCharPos - firstCharPos);				// Can be the pnode id or the array values.
 			
 			/* Layer up. (Current line has less indentation than the previous parent = does not belong to it)*/
@@ -236,7 +281,7 @@ namespace TINY_YAML {
 			/*Single Node containing a value"*/
 			if (colonPos < lastCharPos && lastCharPos != std::string::npos ) {
 				/*value extraction*/
-				std::string value = lineContent.substr(colonPos + 1, lastCharPos - colonPos + 1); // value extraction.
+				std::string value = lineContent.substr(colonPos + 1, lastCharPos - colonPos); // value extraction.
 				value.erase(0, value.find_first_not_of(" \t\f\v\n\r"));
 
 				/*Build pnode*/
