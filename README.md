@@ -99,6 +99,8 @@ First of all, create a yaml parser object:
     - I am trying to add new features and fix bugs for features I use. If I don't use a feature, it won't be added soon. Therefore, if you need a feature, feel free to create an issue or a PR. Just make sure to follow the contribution guide.
 
 # Issues:
+I plan to add more features in the future, but I am not sure when I will get to it. If you need a feature, feel free to create an issue or a PR (ofc PR is better). Just make sure to follow the contribution guide.
+
   - There must be no space between the key and the colon (`:`). (e.g `key : value` is invalid)
   - Does not support all yaml specifications
   - Does not support multi-line strings
@@ -118,9 +120,7 @@ First of all, create a yaml parser object:
     - name: 2
   ```
 
-
-
-# Development
+# Development Setup
 
 ### VSCode
 
@@ -130,3 +130,10 @@ First of all, create a yaml parser object:
 3. Set the compiler path to `clang++` in `.vscode/c_cpp_properties.json` (incase you installed clang in a different path)
 4. Go to the `Run and Debug` tab in the left side bar and click the `Run` button. This will run the `tests/main.cpp` (testing the package).
 
+
+# Conttribution Guide
+
+
+
+# License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. Meaning, you can do whatever you want with this code.
