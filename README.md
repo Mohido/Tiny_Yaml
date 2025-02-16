@@ -1,10 +1,19 @@
 # Tiny_Yaml
 A powerful simple lightweight YAML parser library for C++. There are lots of libraries which parse yaml files in C++, yet they are cumbersome and very heavy to include 
-in a performance-matter project, thus increasing the need for a minimal robust parser. 
+in a performance-matter project, thus increasing the need for a minimal robust parser. This library is useful when you already know that the yaml file will NOT be changing Also, keep in mind that all values are returned as strings:
 
---- 
+```
+# example:
+123 is represented as std::string("123") in C++
 
-## Features:
+true is std::string("true")
+
+"true" is std::string("\"true\"")
+```
+
+> This behavior will change in the future and support a better type-parsing (during yaml loadtime and not during application execution time). But for now, you should know parse the values to the type you need. 
+
+### Features:
 1. Very easy to integrate to your project:
     1. Copy the `yaml/` directory to your project.
     2. Include the `yaml.hpp` file in your source code.
@@ -19,7 +28,7 @@ in a performance-matter project, thus increasing the need for a minimal robust p
 
 ---
 
-## How to Use:
+### How to Use:
 The content below represents a yaml file, then a set of examples on how to extract the data:
 
 > `example.yaml`
@@ -53,7 +62,7 @@ The content below represents a yaml file, then a set of examples on how to extra
 
 First of all, create a yaml parser object:
   ```
-  YAML::Yaml coolYamlObject(<yaml_file_path>);
+  TINY_YAML::Yaml coolYamlObject(<yaml_file_path>);
   ```
   
  -	value `"mohido"` of `object.name` can be accessed as follows:
@@ -83,6 +92,48 @@ First of all, create a yaml parser object:
       
 ---
 
-## Notes:
+# Notes:
     - Contributions are welcome!
     - Bugs/Suggestions/Reports can be created as issues on Github with the desired label.
+    - This library is still in development (which means it does not fully support all yaml features yet).
+    - I am trying to add new features and fix bugs for features I use. If I don't use a feature, it won't be added soon. Therefore, if you need a feature, feel free to create an issue or a PR. Just make sure to follow the contribution guide.
+
+# Issues:
+I plan to add more features in the future, but I am not sure when I will get to it. If you need a feature, feel free to create an issue or a PR (ofc PR is better). Just make sure to follow the contribution guide.
+
+  - There must be no space between the key and the colon (`:`). (e.g `key : value` is invalid)
+  - Does not support all yaml specifications
+  - Does not support multi-line strings
+  - Does not support multiple yaml documents in a single file (`---`, `...` can cause bugs)
+  - Does not write yaml files (it only reads them)
+  - Does not support `%` specification (e.g. `%YAML 1.2`)
+  - All values must be gotten as strings (by using `getData<string>()`) (even numbers and booleans must be gotten as strings and then casted dynamically)
+    - e.g: `variable: ""` in yaml will return `"\"\""` value in C++
+  - Does not support inline lists (e.g. `[1, 2, 3]`). Does not support inline lists with quotes (e.g. `["a", "b", "c"]`).
+  - Does not support inline objects (e.g. `{a: 1, b: 2, c: 3}`). 
+  - Getting data from lists is a very annoying syntax. `getData<std::vector<std::string>>()`. (This will be changed when implementing type-parsing).
+  - Can't get the number of object-items in the current node. 
+  ```
+  # Getting number of children in "object" doesn't work.
+  object: 
+    - name: 1
+    - name: 2
+  ```
+
+# Development Setup
+
+### VSCode
+
+> NOTE: Only windows configuration is given in the `.vscode` directory. 
+1. Install the C/C++ extension
+2. Install CLANG compiler
+3. Set the compiler path to `clang++` in `.vscode/c_cpp_properties.json` (incase you installed clang in a different path)
+4. Go to the `Run and Debug` tab in the left side bar and click the `Run` button. This will run the `tests/main.cpp` (testing the package).
+
+
+# Conttribution Guide
+
+
+
+# License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. Meaning, you can do whatever you want with this code.

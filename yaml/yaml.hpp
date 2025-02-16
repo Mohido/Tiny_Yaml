@@ -11,7 +11,7 @@
 * Module: Tiny Yaml parser
 * Official Remote Repository: https://github.com/Mohido/Tiny_Yaml.git
 * How to Use:
-*	1) Create a yaml object: `YAML::Yaml coolYamlObject(<yaml_file_path>);`
+*	1) Create a yaml object: `TINY_YAML::Yaml coolYamlObject(<yaml_file_path>);`
 *	2) The object will parse the yaml file during initialization
 *	3) Then use the brackets `[]` to access the yaml data:  `coolYamlObject[<node_ID>][<node_ID>].getData<std::string>();`
 *	4) In point 3, we are accessing the value of the following yaml:
@@ -69,12 +69,10 @@
 * - value <extra3> of <node_list[1].extra[2]> can be accessed as follows:
 *		coolYamlObject["node_list"]["1"]["extra"].getData<std::vector<std::string>>()[2];
 */
-
-
 #pragma once
 
-#ifndef YAML_PARSER
-#define YAML_PARSER
+#ifndef TINY_YAML_PARSER
+#define TINY_YAML_PARSER
 
 #define MAX_CHARACTERS_IN_LINE 512
 
@@ -84,7 +82,7 @@
 #include <unordered_map>
 #include <iostream>
 
-namespace YAML {
+namespace TINY_YAML {
 
 	/// <summary>
 	/// If a node is a leaf => it has data. Otherwise, it has only children nodes.
@@ -176,9 +174,8 @@ namespace YAML {
 		~Yaml();
 
 		bool load(const std::string& filepath);									// Loads data from a specific file
-		// bool save(const std::string& filepath);									// Saves data too a specific file, For future release..
-
-
+		// bool save(const std::string& filepath);								// Saves data too a specific file, For future release..
+	
 		friend std::ostream& operator<<(std::ostream& os, Yaml& yaml) {
 			for (const auto& it: yaml.m_roots) {
 				os << *it.second;
