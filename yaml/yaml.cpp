@@ -167,7 +167,7 @@ namespace TINY_YAML {
 					}}
 					break;
 				case '\'':
-					if(hashPos == std::string::npos){
+					if(hashPos == std::string::npos && lineContent[i-1] != '\\'){
 						if(fstQuotePos == std::string::npos)
 							fstQuotePos = i;
 						else if(lstQuotePos == std::string::npos && lineContent[fstQuotePos] == c)
@@ -175,7 +175,7 @@ namespace TINY_YAML {
 					}
 					break;
 				case '\"':
-					if(hashPos == std::string::npos){
+					if(hashPos == std::string::npos && lineContent[i-1] != '\\'){
 						if(fstQuotePos == std::string::npos)
 							fstQuotePos = i;
 						else if(lstQuotePos == std::string::npos && lineContent[fstQuotePos] == c)
@@ -209,7 +209,7 @@ namespace TINY_YAML {
 
 			/*Starting building the pnode*/
 			std::shared_ptr<Node> pnode;
-			std::size_t nodeLastCharPos = (colonPos < lastCharPos) ? colonPos : lastCharPos;
+			std::size_t nodeLastCharPos = (colonPos <= lastCharPos) ? colonPos : lastCharPos+1;
 			std::string nodeID = lineContent.substr(firstCharPos, nodeLastCharPos - firstCharPos);				// Can be the pnode id or the array values.
 			
 			/* Layer up. (Current line has less indentation than the previous parent = does not belong to it)*/
@@ -217,7 +217,6 @@ namespace TINY_YAML {
 				parentsStack.pop();
 			}
 			
-			// TODO: Consider quotes before interpretation of special characters
 			/* List of nodes/items */
 			if (dashPos != std::string::npos) {
 				/*a dash should alway come in the beginning*/
@@ -295,6 +294,7 @@ namespace TINY_YAML {
 					break;
 				}
 			}
+		
 		}
 		
 		if (faulty) {

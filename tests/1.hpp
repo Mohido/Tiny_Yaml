@@ -1,7 +1,7 @@
 /**
  * @file 1.hpp
  * @author Mohammed Ghaith Al-Mahdawi (Mohido)
- * @brief Tests basic YAML variable types
+ * @brief Tests basic YAML variables processing. 
  */
 
 #include <iostream>
@@ -34,8 +34,7 @@ namespace tests {
     bool test_1_variables(){
         int passed = 0;
         int total = 0;
-        std::cout << "############################" << std::endl;
-        std::cout << "TESTGROUP: test_variables" << std::endl;
+        std::cout << "############# TESTGROUP: test_variables" << std::endl;
         try{
             Yaml yamlFile( dirpath() + std::string("/1.yaml"));
             total++; passed += assert(yamlFile["version"].getData<std::string>(), std::string("1.2.3")); 

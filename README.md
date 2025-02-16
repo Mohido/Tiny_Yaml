@@ -99,6 +99,7 @@ First of all, create a yaml parser object:
     - I am trying to add new features and fix bugs for features I use. If I don't use a feature, it won't be added soon. Therefore, if you need a feature, feel free to create an issue or a PR. Just make sure to follow the contribution guide.
 
 # Issues:
+  - There must be no space between the key and the colon (`:`). (e.g `key : value` is invalid)
   - Does not support all yaml specifications
   - Does not support multi-line strings
   - Does not support multiple yaml documents in a single file (`---`, `...` can cause bugs)
@@ -106,6 +107,18 @@ First of all, create a yaml parser object:
   - Does not support `%` specification (e.g. `%YAML 1.2`)
   - All values must be gotten as strings (by using `getData<string>()`) (even numbers and booleans must be gotten as strings and then casted dynamically)
     - e.g: `variable: ""` in yaml will return `"\"\""` value in C++
+  - Does not support inline lists (e.g. `[1, 2, 3]`). Does not support inline lists with quotes (e.g. `["a", "b", "c"]`).
+  - Does not support inline objects (e.g. `{a: 1, b: 2, c: 3}`). 
+  - Getting data from lists is a very annoying syntax. `getData<std::vector<std::string>>()`. (This will be changed when implementing type-parsing).
+  - Can't get the number of object-items in the current node. 
+  ```
+  # Getting number of children in "object" doesn't work.
+  object: 
+    - name: 1
+    - name: 2
+  ```
+
+
 
 # Development
 

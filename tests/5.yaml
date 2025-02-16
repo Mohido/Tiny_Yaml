@@ -1,10 +1,10 @@
 node_list:
-  - name : "node1"
+  - name: "node1"
     value: 1
     hell:
       - item1: "sang"
       - item1: "mang"
-  - name : "node2"
+  - name: "node2"
     value: 2
     temp: extra
     extra:
