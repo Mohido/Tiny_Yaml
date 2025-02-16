@@ -11,7 +11,7 @@
 * Module: Tiny Yaml parser
 * Official Remote Repository: https://github.com/Mohido/Tiny_Yaml.git
 * How to Use:
-*	1) Create a yaml object: `YAML::Yaml coolYamlObject(<yaml_file_path>);`
+*	1) Create a yaml object: `TINY_YAML::Yaml coolYamlObject(<yaml_file_path>);`
 *	2) The object will parse the yaml file during initialization
 *	3) Then use the brackets `[]` to access the yaml data:  `coolYamlObject[<node_ID>][<node_ID>].getData<std::string>();`
 *	4) In point 3, we are accessing the value of the following yaml:
@@ -69,9 +69,6 @@
 * - value <extra3> of <node_list[1].extra[2]> can be accessed as follows:
 *		coolYamlObject["node_list"]["1"]["extra"].getData<std::vector<std::string>>()[2];
 */
-#pragma once
-
-
 #include "yaml.hpp"
 
 #include <vector>
@@ -82,7 +79,7 @@
 #include <stack>
 #include <fstream>
 
-namespace YAML {
+namespace TINY_YAML {
 
 
 	/////////////////////////////// NODE CLASS METHODS ///////////////////////////////
@@ -106,7 +103,7 @@ namespace YAML {
 		if (this->m_children.find(nid) != this->m_children.end())
 			return false;
 		this->m_children.insert({ nid, node });
-		return true; //Fix SIGILL error
+		return true;
 	}
 	
 
@@ -147,27 +144,74 @@ namespace YAML {
 
 			/*Get the positions of the yaml textmarks*/
 			std::string lineContent = buf;		// Transform it into a string to use C++ string methods
-			std::size_t hashPos = lineContent.find('#');
+
+			std::size_t hashPos = std::string::npos;
+			std::size_t fstQuotePos = std::string::npos;
+			std::size_t lstQuotePos = std::string::npos;
+			std::size_t dashPos = std::string::npos;
+			// Find special characters which takes NO affect if they are in "" or ''
+			for (size_t i = 0; i < lineContent.length(); i++) {
+				char c = lineContent[i];
+				switch (c)
+				{
+				case '-': {
+					// DO NOT update If ' or " then comes and not ended. And if it is already assigned
+					if( !(fstQuotePos != std::string::npos && lstQuotePos == std::string::npos) && dashPos == std::string::npos) {
+						dashPos = i;
+					}}
+					break;
+				case '#' : {
+					// DO NOT update If ' or " comes and not ended. And if # is already found
+					if( hashPos == std::string::npos && !(fstQuotePos != std::string::npos && lstQuotePos == std::string::npos)) {
+						hashPos = i;
+					}}
+					break;
+				case '\'':
+					if(hashPos == std::string::npos && lineContent[i-1] != '\\'){
+						if(fstQuotePos == std::string::npos)
+							fstQuotePos = i;
+						else if(lstQuotePos == std::string::npos && lineContent[fstQuotePos] == c)
+							lstQuotePos = i;
+					}
+					break;
+				case '\"':
+					if(hashPos == std::string::npos && lineContent[i-1] != '\\'){
+						if(fstQuotePos == std::string::npos)
+							fstQuotePos = i;
+						else if(lstQuotePos == std::string::npos && lineContent[fstQuotePos] == c)
+							lstQuotePos = i;
+					}
+					break;
+				default:
+					break;
+				}
+			}
+			
+			if(fstQuotePos != std::string::npos && lstQuotePos == std::string::npos){
+				std::cerr << "ERROR: unclosed quote found. Please close the quote and reparse." << std::endl;
+				faulty = true; break;
+			}
+
 			if (hashPos != std::string::npos) 
 				lineContent.erase(hashPos);
+
 			std::size_t colonPos = lineContent.find(':');
-			std::size_t dashPos	 = lineContent.find('-');
 			std::size_t firstCharPos = lineContent.find_first_not_of(" -#\t\f\v\n\r");
-			std::size_t lastCharPos = lineContent.find_last_not_of(" \t\f\v\n\r");
+			std::size_t lastCharPos = lineContent.find_last_not_of(" #\t\f\v\n\r");
 
 			/*Validation layers*/
 			if (firstCharPos == std::string::npos)		// If line is empty (Only white spaces), read next line
 				continue;
-
+		
 			if (colonPos == dashPos && dashPos == std::string::npos) { // No dash and no colon in the line => Invalid
 				faulty = true; break;
 			}
 
 			/*Starting building the pnode*/
 			std::shared_ptr<Node> pnode;
-			std::size_t nodeLastCharPos = (colonPos < lastCharPos + 1) ? colonPos : lastCharPos + 1;
+			std::size_t nodeLastCharPos = (colonPos <= lastCharPos) ? colonPos : lastCharPos+1;
 			std::string nodeID = lineContent.substr(firstCharPos, nodeLastCharPos - firstCharPos);				// Can be the pnode id or the array values.
-
+			
 			/* Layer up. (Current line has less indentation than the previous parent = does not belong to it)*/
 			while (parentsStack.size() != 0 && parentsStack.top().second >= firstCharPos) {
 				parentsStack.pop();
@@ -178,6 +222,7 @@ namespace YAML {
 				/*a dash should alway come in the beginning*/
 				if ((parentsStack.top().first->getSize() != 0 && !parentsStack.top().third) || parentsStack.size() == 0) { 
 					faulty = true;
+					std::cerr << "ERROR: Variable " << nodeID << " contains a '-' at column " << dashPos << ". A Dash must not exist there." << std::endl;
 					break;
 				}
 
@@ -235,7 +280,7 @@ namespace YAML {
 			/*Single Node containing a value"*/
 			if (colonPos < lastCharPos && lastCharPos != std::string::npos ) {
 				/*value extraction*/
-				std::string value = lineContent.substr(colonPos + 1, lastCharPos - colonPos + 1); // value extraction.
+				std::string value = lineContent.substr(colonPos + 1, lastCharPos - colonPos); // value extraction.
 				value.erase(0, value.find_first_not_of(" \t\f\v\n\r"));
 
 				/*Build pnode*/
@@ -249,6 +294,7 @@ namespace YAML {
 					break;
 				}
 			}
+		
 		}
 		
 		if (faulty) {
